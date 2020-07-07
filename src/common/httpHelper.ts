@@ -6,6 +6,8 @@ class HttpHelper{
     }
 
     httpPost(url: string, body: any): Promise<any>{
+        let responseCode: number;
+
         return fetch(url, 
                     {
                         method: 'POST',
@@ -15,19 +17,22 @@ class HttpHelper{
                         body: JSON.stringify(body)
                     }
                 )
+                
             .then(response =>{ 
-               if(response.status === 200){
-                return response.json();
-               }
-               else{
-                   return {
-                       error: 'code' + response.status
-                    }
-               }               
+                responseCode = response.status;
+                try{
+                    return response.json();
+                }
+                catch(err){}                
             })
             .then(
                 result => result              
             )
+            .catch(err=>{
+                return {
+                    error: 'code' + responseCode
+                }
+            })
           
     }
 }
