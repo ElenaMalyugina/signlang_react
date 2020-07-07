@@ -12,7 +12,7 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
 
     render(){
         return (
-            <form onSubmit={this.props.handleSubmit}>
+            <form className="t-loginForm" onSubmit={this.props.handleSubmit}>
                 <h3>Вход в систему</h3>
                 <div className="form-group">
                     <label htmlFor="login">Логин</label>

@@ -4,7 +4,7 @@ import LoginForm from './login/login.component';
 
 function App() {
   return (
-    <div className="container">
+    <div className="container t-container">
       <LoginForm/>
     </div>
   );

@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
-import App from './App';
+
+import LoginForm from '../login/login.component';
 
 let container = null;
 beforeEach(() => {
@@ -17,10 +18,10 @@ afterEach(() => {
   container = null;
 });
 
-it('render App container', ()=>{
+it('render login form', ()=>{
   act(()=>{
-    render(<App/>, container)
+    render(<LoginForm/>, container)
   });
-  const appContainer = document.querySelector('.t-container');
-  expect(appContainer).toBeInTheDocument();
+  const loginForm = document.querySelector('.t-loginForm');
+  expect(loginForm).toBeInTheDocument();
 })
