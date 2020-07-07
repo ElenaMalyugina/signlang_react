@@ -1,11 +1,11 @@
 class HttpHelper{
-    httpGet(url: string): Promise<any>{
+    public httpGet(url: string): Promise<any>{
         return fetch(url)
             .then(response => response.json())
             .then(result => result)
     }
 
-    httpPost(url: string, body: any): Promise<any>{
+    public httpPost(url: string, body: any): Promise<any>{
         let responseCode: number;
 
         return fetch(url, 

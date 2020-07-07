@@ -1,12 +1,13 @@
 import React, { SyntheticEvent, FormEvent } from "react";
 import { Errors } from "../constants/errors";
 import HttpHelper from "./httpHelper";
+import { IBaseFormState } from "./IBaseFormState";
 
 function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: string){
-    return class extends React.Component<any, any>{
+    return class extends React.Component<{}, IBaseFormState>{
         private httpHelper:HttpHelper = new HttpHelper();
 
-        constructor(props: any){
+        constructor(props: {}){
             super(props);
             this.state = {
                 formData:{},
