@@ -4,6 +4,8 @@ import HttpHelper from "./httpHelper";
 import { IBaseFormState } from "./IBaseFormState";
 import { IValidationSchema } from "../validation/IValidationSchema";
 import { validationForm } from "../validation/validation";
+import { ErrorInputMessage } from "./errorInputMessage";
+import { IClientError } from "../validation/IClientErrors";
 
 function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: string){
     return class extends React.Component<{}, IBaseFormState>{
@@ -15,7 +17,7 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
                 formData:{},
                 isSubmitting: false, 
                 serverError: '',
-                clientErrors: {}
+                clientErrors: []
             }
         }
 
@@ -28,7 +30,7 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
             this.setState((state: {formData: { [x: string]: string; }; })=> {
                 state.formData[name] = value;                    
             });
-            this.setState({clientErrors: {}});
+            this.setState({clientErrors: [], serverError:''});
         }
 
         public handleSubmit = (event: FormEvent<HTMLFormElement>, validationSchema: IValidationSchema) => {
@@ -53,13 +55,19 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
                         
                     }
                 }) 
-        }
+        }        
 
-        private clientValidation(formData: {[x:string]:string}, validationSchema: IValidationSchema): boolean{
+        public clientValidation(formData: {[x:string]:string}, validationSchema: IValidationSchema): boolean{
             let validationResult = validationForm(formData, validationSchema);
             console.log(validationResult);
             this.setState({clientErrors: validationResult});
             return !Object.keys(validationResult).length;
+        }
+
+        public getClientErrors(errors: IClientError[], field: string){
+            return errors
+                    .filter(el=>el.field===field)
+                    .map(el=><ErrorInputMessage key={el.errorText} errorText={el.errorText}/>);
         }
 
         private getServerErrorText=(errCode: string): string=>{            
@@ -77,9 +85,9 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
                         handleSubmit={this.handleSubmit}
                         formData={this.state.formData} 
                         isSubmitting={this.state.isSubmitting}
-                        clientErrors={this.state.clientErrors}
                         serverError={this.state.serverError}
-                        validation={this.clientValidation}
+                        clientErrors={this.state.clientErrors}
+                        getClientErrors={this.getClientErrors}
                         {...this.props}/>
         }
     }

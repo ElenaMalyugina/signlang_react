@@ -1,3 +1,5 @@
-export interface IClientErrors{
-    [field: string] : string;    
+export interface IClientError{
+    field: string;
+    errorType: string;
+    errorText: string; 
 }

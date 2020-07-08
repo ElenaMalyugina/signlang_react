@@ -28,3 +28,7 @@
       max-width: 1140px;
   }
 }
+
+.error{
+  color: red;
+}
