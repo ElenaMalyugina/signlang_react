@@ -1,5 +1,8 @@
+import { IClientErrors } from "../validation/IClientErrors";
+
 export interface IBaseFormState{
-    formData: object,
-    isSubmitting: boolean, 
-    serverError: string
+    formData: {[x:string]:string};
+    isSubmitting: boolean;
+    serverError: string;
+    clientErrors: IClientErrors;
 }

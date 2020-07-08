@@ -1,7 +1,9 @@
 import React, { SyntheticEvent, FormEvent } from "react";
-import { Errors } from "../constants/errors";
+import { ServerErrors } from "../constants/serverErrors";
 import HttpHelper from "./httpHelper";
 import { IBaseFormState } from "./IBaseFormState";
+import { IValidationSchema } from "../validation/IValidationSchema";
+import { validationForm } from "../validation/validation";
 
 function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: string){
     return class extends React.Component<{}, IBaseFormState>{
@@ -12,7 +14,8 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
             this.state = {
                 formData:{},
                 isSubmitting: false, 
-                serverError: ''
+                serverError: '',
+                clientErrors: {}
             }
         }
 
@@ -23,21 +26,27 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
             const value: string = el.value;
         
             this.setState((state: {formData: { [x: string]: string; }; })=> {
-                state.formData[name] = value;    
+                state.formData[name] = value;                    
             });
+            this.setState({clientErrors: {}});
         }
 
-        public handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        public handleSubmit = (event: FormEvent<HTMLFormElement>, validationSchema: IValidationSchema) => {
             event.preventDefault();
-            console.log(this.state.formData);
+            console.log(this.state.formData);            
             this.setState({isSubmitting: true});
+            let isValid = this.clientValidation(this.state.formData, validationSchema);
+            if(!isValid){
+                this.setState({isSubmitting: false});
+                return false;
+            }
             this.httpHelper.httpPost(submittedFormUrl, this.state.formData)
                 .then((resp:any)=>{
                     console.log(resp);
                     this.setState({isSubmitting: false});
                     
                     if(resp.error){
-                        const errorText = this.getErrorText(resp.error);
+                        const errorText = this.getServerErrorText(resp.error);
                         this.setState({
                             serverError: errorText
                         });
@@ -46,11 +55,18 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
                 }) 
         }
 
-        private getErrorText=(errCode: string): string=>{            
+        private clientValidation(formData: {[x:string]:string}, validationSchema: IValidationSchema): boolean{
+            let validationResult = validationForm(formData, validationSchema);
+            console.log(validationResult);
+            this.setState({clientErrors: validationResult});
+            return !Object.keys(validationResult).length;
+        }
+
+        private getServerErrorText=(errCode: string): string=>{            
             const key: string = errCode;
-            const errorText = Errors[key];
+            const errorText = ServerErrors[key];
             if(!errorText){
-                return Errors.defaultText;
+                return ServerErrors.defaultText;
             }                     
             return errorText;
         }
@@ -61,7 +77,9 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
                         handleSubmit={this.handleSubmit}
                         formData={this.state.formData} 
                         isSubmitting={this.state.isSubmitting}
+                        clientErrors={this.state.clientErrors}
                         serverError={this.state.serverError}
+                        validation={this.clientValidation}
                         {...this.props}/>
         }
     }

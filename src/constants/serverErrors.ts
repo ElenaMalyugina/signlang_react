@@ -1,4 +1,4 @@
-export const Errors:{[x:string]: string} = {
+export const ServerErrors:{[x:string]: string} = {
     code403: "Доступ к ресурсу запрещен",
     defaultText: "Произошла неизвестная ошибка. Возможно, сервер недоступен или данные повреждены, повторите попытку позже"
 }
