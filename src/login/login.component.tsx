@@ -3,7 +3,6 @@ import { Urls } from "../constants/urls";
 import { ILoginState } from "./ILoginState";
 import FormHOC from '../common/formHOC';
 import { ILoginProps } from "./IloginProps";
-import { ErrorInputMessage } from "../common/errorInputMessage";
 
 class LoginForm extends React.Component<ILoginProps, ILoginState>{
     constructor(props: ILoginProps){
@@ -17,7 +16,8 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
                     required: true
                 }        
             }
-    }  }
+        }  
+    }
 
     render(){
         const loginErrors = this.props.getClientErrors(this.props.clientErrors, 'login');     
