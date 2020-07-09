@@ -1,13 +1,16 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 import LoginForm from './login/login.component';
-import ErrorBoundary from './common/errorBoundary';
+import ErrorBoundary from './helpers/errorBoundary';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 function App() {
   return (
     <div className="container t-container">
       <ErrorBoundary>
-        <LoginForm/>
+        <BrowserRouter>
+          <Route exact path='/' component={LoginForm}/>          
+        </BrowserRouter>
       </ErrorBoundary>      
     </div>
   );

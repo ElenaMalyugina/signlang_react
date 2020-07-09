@@ -1,6 +1,6 @@
 import React, { SyntheticEvent, FormEvent } from "react";
 import { ServerErrors } from "../constants/serverErrors";
-import HttpHelper from "./httpHelper";
+import HttpHelper from "../helpers/httpHelper";
 import { IBaseFormState } from "./IBaseFormState";
 import { IValidationSchema } from "../validation/IValidationSchema";
 import { validationForm } from "../validation/validation";
@@ -57,7 +57,7 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
                 }) 
         }        
 
-        public clientValidation(formData: {[x:string]:string}, validationSchema: IValidationSchema): boolean{
+        private clientValidation(formData: {[x:string]:string}, validationSchema: IValidationSchema): boolean{
             let validationResult = validationForm(formData, validationSchema);
             console.log(validationResult);
             this.setState({clientErrors: validationResult});
@@ -67,7 +67,7 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
         public getClientErrors(errors: IClientError[], field: string){
             return errors
                     .filter(el=>el.field===field)
-                    .map(el=><ErrorInputMessage key={el.errorText} errorText={el.errorText}/>);
+                    .map((el, i)=><ErrorInputMessage key={el.errorText+i} errorText={el.errorText}/>);
         }
 
         private getServerErrorText=(errCode: string): string=>{            
