@@ -4,6 +4,7 @@ import { ILoginState } from "./ILoginState";
 import FormHOC from '../commonForm/formHOC';
 import { ILoginProps } from "./IloginProps";
 import DefaultInput from "../commonForm/defaultInput";
+import { Link } from "react-router-dom";
 
 class LoginForm extends React.Component<ILoginProps, ILoginState>{
     constructor(props: ILoginProps){
@@ -26,6 +27,7 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
     render(){
         
         return (
+            <>
             <form className="t-loginForm" onSubmit={(e)=>this.props.handleSubmit(e, this.state.validationSchema)}>
                 <h3>Вход в систему</h3>
                 <DefaultInput
@@ -46,6 +48,8 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
                 <button className="btn" type="submit" disabled={this.props.isSubmitting}>Войти</button>
                 <div className="error">{this.props.serverError}</div>
             </form>
+            <Link to="/registration">Регистрация нового пользователя</Link>
+            </>
         )
     }
 }
