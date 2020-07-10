@@ -3,15 +3,14 @@ import { ServerErrors } from "../constants/serverErrors";
 import HttpHelper from "../helpers/httpHelper";
 import { IBaseFormState } from "./IBaseFormState";
 import { IValidationSchema } from "../validation/IValidationSchema";
-import { validationForm } from "../validation/validation";
 import { ErrorInputMessage } from "./errorInputMessage";
 import { IClientError } from "../validation/IClientErrors";
 
 function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: string){
-    return class extends React.Component<{}, IBaseFormState>{
+    return class extends React.Component<{validationForm: (x:any,a:any)=>IClientError[]}, IBaseFormState>{
         private httpHelper:HttpHelper = new HttpHelper();
 
-        constructor(props: {}){
+        constructor(props: {validationForm: (x:any,a:any)=>IClientError[]}){
             super(props);
             this.state = {
                 formData:{},
@@ -58,7 +57,7 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
         }        
 
         private clientValidation(formData: {[x:string]:string}, validationSchema: IValidationSchema): boolean{
-            let validationResult = validationForm(formData, validationSchema);
+            let validationResult = this.props.validationForm(formData, validationSchema);
             console.log(validationResult);
             this.setState({clientErrors: validationResult});
             return !Object.keys(validationResult).length;

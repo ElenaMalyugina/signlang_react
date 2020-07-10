@@ -4,6 +4,7 @@ import { ILoginState } from "./ILoginState";
 import FormHOC from '../commonForm/formHOC';
 import { ILoginProps } from "./IloginProps";
 import DefaultInput from "../commonForm/defaultInput";
+import ValidationHOC from "../validation/validation";
 
 class LoginForm extends React.Component<ILoginProps, ILoginState>{
     constructor(props: ILoginProps){
@@ -50,4 +51,4 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
     }
 }
 
-export default FormHOC(LoginForm, Urls.login);
+export default ValidationHOC(FormHOC(LoginForm, Urls.login));
