@@ -45,7 +45,7 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
                     getClientErrors = {this.props.getClientErrors}
                 />
                 
-                <button className="btn" type="submit" disabled={this.props.isSubmitting}>Войти</button>
+                <button className="btn btn-primary" type="submit" disabled={this.props.isSubmitting}>Войти</button>
                 <div className="error">{this.props.serverError}</div>
             </form>
             <Link to="/registration">Регистрация нового пользователя</Link>

@@ -10,15 +10,15 @@ import { IClientError } from "../validation/IClientErrors";
 function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: string){
     return class extends React.Component<{}, IBaseFormState>{
         private httpHelper:HttpHelper = new HttpHelper();
-
-        constructor(props: {}){
+        
+        constructor(props: {fileRef: any}){
             super(props);
             this.state = {
                 formData:{},
                 isSubmitting: false, 
                 serverError: '',
                 clientErrors: []
-            }
+            }               
         }
 
         public handleChange = (e: SyntheticEvent)=>{
@@ -31,6 +31,14 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
                 state.formData[name] = value;                    
             });
             this.setState({clientErrors: [], serverError:''});
+        }
+
+        public handleChangeFile=(e: any)=>{
+            const name = e.target.files[0].name;
+
+            this.setState((state)=>{
+                state.formData.photo = name;
+            })
         }
 
         public handleSubmit = (event: FormEvent<HTMLFormElement>, validationSchema: IValidationSchema) => {
@@ -81,16 +89,17 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
         
         public render(){
             return <WrappedComponent 
-                        handleChange={this.handleChange} 
-                        handleSubmit={this.handleSubmit}
-                        formData={this.state.formData} 
-                        isSubmitting={this.state.isSubmitting}
-                        serverError={this.state.serverError}
-                        clientErrors={this.state.clientErrors}
-                        getClientErrors={this.getClientErrors}
-                        {...this.props}/>
+                    handleChange={this.handleChange} 
+                    handleChangeFile={this.handleChangeFile}
+                    handleSubmit={this.handleSubmit}
+                    formData={this.state.formData} 
+                    isSubmitting={this.state.isSubmitting}
+                    serverError={this.state.serverError}
+                    clientErrors={this.state.clientErrors}
+                    getClientErrors={this.getClientErrors}
+                    {...this.props}/>
         }
-    }
+    } 
 }
 
 export default formHOC;

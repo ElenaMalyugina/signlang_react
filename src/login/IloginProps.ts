@@ -1,13 +1,6 @@
 import { ILoginData } from "./IloginData";
-import { SyntheticEvent, FormEvent } from "react";
-import { IClientError } from "../validation/IClientErrors";
+import { IBaseFormProps } from "../commonForm/IBaseFormProps";
 
-export interface ILoginProps{
-    formData: ILoginData;
-    serverError: string;
-    isSubmitting: false;
-    clientErrors: IClientError[];
-    handleChange: (e:SyntheticEvent)=>void;
-    handleSubmit: (e:FormEvent, validationSchema: object)=>void;
-    getClientErrors:(err: IClientError[], field: string)=>React.Component; 
+export interface ILoginProps extends IBaseFormProps{
+    formData: ILoginData;    
 }
