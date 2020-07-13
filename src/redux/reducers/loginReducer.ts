@@ -11,7 +11,8 @@ export default (state: any= initialState, action: any)=>{
         case LOGIN_START: 
             return {
                 ...state,
-                isLoading: true
+                isLoading: true,
+                error: ''                
             };
         case LOGIN_SUCCESS: 
             return {
@@ -25,7 +26,6 @@ export default (state: any= initialState, action: any)=>{
                 isLoading: false,
                 error: action.payload
             };
-
         default:
             return state;
     }

@@ -5,7 +5,6 @@ import { validationForm } from "../validation/validation";
 import { ErrorInputMessage } from "./errorInputMessage";
 import { IClientError } from "../validation/IClientErrors";
 import { IBaseFormProps } from "./IBaseFormProps";
-import { ConnectedComponent } from "react-redux";
 
 function formHOC(WrappedComponent : any){
     return class extends React.Component<IBaseFormProps, IBaseFormState>{
@@ -27,7 +26,7 @@ function formHOC(WrappedComponent : any){
             this.setState((state: {formData: { [x: string]: string; }; })=> {
                 state.formData[name] = value;                    
             });
-            this.setState({clientErrors: []});
+            this.setState({clientErrors: []});            
         }
 
         public handleChangeFile=(e: any)=>{            
@@ -44,20 +43,6 @@ function formHOC(WrappedComponent : any){
                 return false;
             }
             return true;
-            
-            /*this.httpHelper.httpPost(submittedFormUrl, this.state.formData)
-                .then((resp:any)=>{
-                    console.log(resp);
-                    this.setState({isSubmitting: false});
-                    
-                    if(resp.error){
-                        const errorText = this.getServerErrorText(resp.error);
-                        this.setState({
-                            serverError: errorText
-                        });
-                        
-                    }
-                }) */
         }        
 
         private clientValidation(formData: {[x:string]:string}, validationSchema: IValidationSchema): boolean{
@@ -71,7 +56,7 @@ function formHOC(WrappedComponent : any){
             return errors
                     .filter(el=>el.field===field)
                     .map((el, i)=><ErrorInputMessage key={el.errorText+i} errorText={el.errorText}/>);
-        }        
+        }   
         
         public render(){
             return <WrappedComponent 
@@ -80,8 +65,8 @@ function formHOC(WrappedComponent : any){
                     isValid={this.validationForm}
                     formData={this.state.formData} 
                     clientErrors={this.state.clientErrors}
-                    getClientErrors={this.getClientErrors}
-                    {...this.props}/>
+                    getClientErrors={this.getClientErrors}     
+                    />
         }
     } 
 }

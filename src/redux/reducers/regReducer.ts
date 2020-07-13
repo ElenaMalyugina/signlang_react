@@ -11,7 +11,8 @@ export default (state: any= initialState, action: any)=>{
         case REG_START: 
             return {
                 ...state,
-                isLoading: true
+                isLoading: true,
+                error: ''
             };
         case REG_SUCCESS: 
             return {
