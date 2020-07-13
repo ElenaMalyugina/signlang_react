@@ -1,27 +1,24 @@
 import React, { SyntheticEvent, FormEvent } from "react";
-import { ServerErrors } from "../constants/serverErrors";
-import HttpHelper from "../helpers/httpHelper";
 import { IBaseFormState } from "./IBaseFormState";
 import { IValidationSchema } from "../validation/IValidationSchema";
 import { validationForm } from "../validation/validation";
 import { ErrorInputMessage } from "./errorInputMessage";
 import { IClientError } from "../validation/IClientErrors";
+import { IBaseFormProps } from "./IBaseFormProps";
+import { ConnectedComponent } from "react-redux";
 
-function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: string){
-    return class extends React.Component<{}, IBaseFormState>{
-        private httpHelper:HttpHelper = new HttpHelper();
-        
-        constructor(props: {fileRef: any}){
+function formHOC(WrappedComponent : any){
+    return class extends React.Component<IBaseFormProps, IBaseFormState>{
+               
+        constructor(props: IBaseFormProps){
             super(props);
             this.state = {
                 formData:{},
-                isSubmitting: false, 
-                serverError: '',
                 clientErrors: []
             }               
         }
 
-        public handleChange = (e: SyntheticEvent)=>{
+        public handleChangeInput = (e: SyntheticEvent)=>{
             e.preventDefault();
             const el = e.target as HTMLInputElement;
             const name: string = el.name;
@@ -30,10 +27,10 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
             this.setState((state: {formData: { [x: string]: string; }; })=> {
                 state.formData[name] = value;                    
             });
-            this.setState({clientErrors: [], serverError:''});
+            this.setState({clientErrors: []});
         }
 
-        public handleChangeFile=(e: any)=>{
+        public handleChangeFile=(e: any)=>{            
             const name = e.target.files[0].name;
 
             this.setState((state)=>{
@@ -41,16 +38,14 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
             })
         }
 
-        public handleSubmit = (event: FormEvent<HTMLFormElement>, validationSchema: IValidationSchema) => {
-            event.preventDefault();
-            console.log(this.state.formData);            
-            this.setState({isSubmitting: true});
+        public validationForm = (validationSchema: IValidationSchema) => {
             let isValid = this.clientValidation(this.state.formData, validationSchema);
             if(!isValid){
-                this.setState({isSubmitting: false});
                 return false;
             }
-            this.httpHelper.httpPost(submittedFormUrl, this.state.formData)
+            return true;
+            
+            /*this.httpHelper.httpPost(submittedFormUrl, this.state.formData)
                 .then((resp:any)=>{
                     console.log(resp);
                     this.setState({isSubmitting: false});
@@ -62,7 +57,7 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
                         });
                         
                     }
-                }) 
+                }) */
         }        
 
         private clientValidation(formData: {[x:string]:string}, validationSchema: IValidationSchema): boolean{
@@ -76,25 +71,14 @@ function formHOC(WrappedComponent: typeof React.Component, submittedFormUrl: str
             return errors
                     .filter(el=>el.field===field)
                     .map((el, i)=><ErrorInputMessage key={el.errorText+i} errorText={el.errorText}/>);
-        }
-
-        private getServerErrorText=(errCode: string): string=>{            
-            const key: string = errCode;
-            const errorText = ServerErrors[key];
-            if(!errorText){
-                return ServerErrors.defaultText;
-            }                     
-            return errorText;
-        }
+        }        
         
         public render(){
             return <WrappedComponent 
-                    handleChange={this.handleChange} 
+                    handleChange={this.handleChangeInput} 
                     handleChangeFile={this.handleChangeFile}
-                    handleSubmit={this.handleSubmit}
+                    isValid={this.validationForm}
                     formData={this.state.formData} 
-                    isSubmitting={this.state.isSubmitting}
-                    serverError={this.state.serverError}
                     clientErrors={this.state.clientErrors}
                     getClientErrors={this.getClientErrors}
                     {...this.props}/>

@@ -1,7 +1,7 @@
 import React, { SyntheticEvent } from "react";
 import { IClientError } from "../validation/IClientErrors";
 
-interface InputProps{
+export interface InputProps{
     alias: string;
     visualName: string;
     clientErrors: IClientError[];

@@ -1,14 +1,15 @@
-import formHOC from "../commonForm/formHOC";
-import React from "react";
-import { Urls } from "../constants/urls";
+import FormHOC from "../commonForm/formHOC";
+import React, { FormEvent } from "react";
 import DefaultInput from "../commonForm/defaultInput";
 import DefaultSelect from "../commonForm/defaultSelect";
 import { IRegistrationProps } from "./IRegistrationProps";
 import { IRegistrationState } from "./IRegistrationState";
 import DefaultFile from "../commonForm/defaultFile";
+import { connect } from "react-redux";
+import {regStart} from "../redux/actions/registrationAction";
 
 class RegistrationForm extends React.Component<IRegistrationProps, IRegistrationState>{
-    constructor(props: any){
+    constructor(props: IRegistrationProps){
         super(props)
         this.state = {
             validationSchema:{     
@@ -32,9 +33,16 @@ class RegistrationForm extends React.Component<IRegistrationProps, IRegistration
        
     }
 
+    handleSubmit(e:FormEvent, validationSchema: any) {
+        e.preventDefault();
+        const isValid = this.props.isValid(validationSchema);
+        if(!isValid) return;
+        this.props.regStart(this.props.formData);
+    }
+
     render(){
         return (
-        <form onSubmit={(e)=>this.props.handleSubmit(e, this.state.validationSchema)}>
+        <form onSubmit={(e)=>this.handleSubmit(e, this.state.validationSchema)}>
             <h3>Регистрация пользователя</h3>
             <DefaultInput 
                 alias='firstName' 
@@ -53,7 +61,9 @@ class RegistrationForm extends React.Component<IRegistrationProps, IRegistration
             <DefaultFile
                 alias="photo"
                 visualName="Загрузите аватар"
-                handleChange={this.props.handleChangeFile}                
+                handleChange={this.props.handleChangeFile}   
+                clientErrors={this.props.clientErrors}   
+                getClientErrors = {this.props.getClientErrors}           
             />
             <DefaultSelect
                 alias='role' 
@@ -82,4 +92,13 @@ class RegistrationForm extends React.Component<IRegistrationProps, IRegistration
         </form>   );
     }
 }
-export default formHOC(RegistrationForm, Urls.registration);
+
+const mapStateToProps=(state: any)=>({
+    serverError: state.reg.error,
+    isLoading: state.reg.isLoading
+});
+const mapDispatchToProps = {
+    regStart
+};
+
+export default FormHOC(connect(mapStateToProps, mapDispatchToProps)(RegistrationForm));

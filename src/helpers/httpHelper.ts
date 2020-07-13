@@ -1,13 +1,11 @@
 class HttpHelper{
-    public httpGet(url: string): Promise<any>{
+    public static httpGet(url: string): Promise<any>{
         return fetch(url)
             .then(response => response.json())
             .then(result => result)
     }
 
-    public httpPost(url: string, body: any): Promise<any>{
-        let responseCode: number;
-
+    public static httpPost(url: string, body: any): Promise<any>{
         return fetch(url, 
                     {
                         method: 'POST',
@@ -18,7 +16,7 @@ class HttpHelper{
                     }
                 )
                 
-            .then(response =>{ 
+            /*.then(response =>{ 
                 responseCode = response.status;
                 try{
                     return response.json();
@@ -29,10 +27,8 @@ class HttpHelper{
                 result => result              
             )
             .catch(err=>{
-                return {
-                    error: 'code' + responseCode
-                }
-            })
+                return 'code' + responseCode                
+            })*/
           
     }
 }

@@ -1,15 +1,20 @@
 import React from "react";
+import { InputProps } from "./defaultInput";
 
-class DefaultFile extends React.Component<any, any>{
+interface IFileInputProps extends InputProps{
+
+}
+
+class DefaultFile extends React.Component<IFileInputProps, {}>{
     render(){
         return (
             <div className="form-group">
-                <label htmlFor="file">Фото</label>
+                <label htmlFor={this.props.alias}>{this.props.visualName}</label>
                 <input 
                     className="form-control" 
                     type="file" 
-                    id="photo" 
-                    name="photo" 
+                    id={this.props.alias} 
+                    name={this.props.alias}
                     onChange={this.props.handleChange}/>               
             </div>
         )

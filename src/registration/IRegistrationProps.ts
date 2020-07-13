@@ -3,6 +3,6 @@ import { IBaseFormProps } from "../commonForm/IBaseFormProps";
 
 export interface IRegistrationProps extends IBaseFormProps{
     formData: IRegistrationData;
-    fileRef: any;
-    
+    regStart: any;
+    handleChangeFile: ()=>void;    
 }

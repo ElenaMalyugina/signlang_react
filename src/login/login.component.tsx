@@ -1,10 +1,11 @@
-import React from "react";
-import { Urls } from "../constants/urls";
+import React, { FormEvent } from "react";
 import { ILoginState } from "./ILoginState";
 import FormHOC from '../commonForm/formHOC';
 import { ILoginProps } from "./IloginProps";
 import DefaultInput from "../commonForm/defaultInput";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import {loginStart} from "../redux/actions/loginActions";
 
 class LoginForm extends React.Component<ILoginProps, ILoginState>{
     constructor(props: ILoginProps){
@@ -24,11 +25,18 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
         }  
     }
 
+    handleSubmit(e:FormEvent, validationSchema: any) {
+        e.preventDefault();
+        const isValid = this.props.isValid(validationSchema);
+        if(!isValid) return;
+        this.props.loginStart(this.props.formData);
+    }
+
     render(){
         
         return (
             <>
-            <form className="t-loginForm" onSubmit={(e)=>this.props.handleSubmit(e, this.state.validationSchema)}>
+            <form className="t-loginForm" onSubmit={(e)=>this.handleSubmit(e, this.state.validationSchema)}>
                 <h3>Вход в систему</h3>
                 <DefaultInput
                     alias='login' 
@@ -45,13 +53,26 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
                     getClientErrors = {this.props.getClientErrors}
                 />
                 
-                <button className="btn btn-primary" type="submit" disabled={this.props.isSubmitting}>Войти</button>
+                <button className="btn btn-primary" type="submit" disabled={this.props.isLoading}>Войти</button>
                 <div className="error">{this.props.serverError}</div>
             </form>
             <Link to="/registration">Регистрация нового пользователя</Link>
             </>
         )
     }
+  
 }
 
-export default FormHOC(LoginForm, Urls.login);
+const mapStateToProps = (state: any)=>{
+    return{    
+        userData: state.login, 
+        serverError: state.login.error,
+        isLoading: state.login.isLoading
+    }};
+
+const mapDispatchToProps = {
+    loginStart
+}
+
+
+export default FormHOC(connect(mapStateToProps, mapDispatchToProps)(LoginForm));
