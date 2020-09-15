@@ -9,9 +9,9 @@ export const regStart = (formData: any)=>({
     }
 })
 
-export const regSuccess = (userData: any)=>({
+export const regSuccess = (userId: any)=>({
     type: REG_SUCCESS,
-    payload: userData
+    payload: userId
 })
 
 export const regError = (error: any)=>({

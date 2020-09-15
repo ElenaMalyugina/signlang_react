@@ -40,6 +40,13 @@ class RegistrationForm extends React.Component<IRegistrationProps, IRegistration
         this.props.regStart(this.props.formData);
     }
 
+    componentDidUpdate(){
+        if(this.props.userId){
+            debugger;
+            window.location.href="/";
+        }
+    }
+
     render(){
         return (
         <form onSubmit={(e)=>this.handleSubmit(e, this.state.validationSchema)}>
@@ -93,10 +100,14 @@ class RegistrationForm extends React.Component<IRegistrationProps, IRegistration
     }
 }
 
-const mapStateToProps=(state: any)=>({
-    serverError: state.reg.error,
-    isLoading: state.reg.isLoading
-});
+const mapStateToProps=(state: any)=>{
+    debugger;
+    return{
+        serverError: state.reg.error,
+        isLoading: state.reg.isLoading,
+        userId: state.reg.userId
+    }
+};
 const mapDispatchToProps = {
     regStart
 };

@@ -3,5 +3,6 @@ import { IBaseFormProps } from "../commonForm/IBaseFormProps";
 
 export interface ILoginProps extends IBaseFormProps{
     formData: ILoginData;   
-    loginStart: any; 
+    loginStart: any; //todo
+    userData: any;    //todo
 }

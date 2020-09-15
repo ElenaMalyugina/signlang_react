@@ -32,6 +32,14 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
         this.props.loginStart(this.props.formData);
     }
 
+    componentDidUpdate(){
+        if(this.props.userData){
+            if(this.props.userData.userId){
+                window.location.href="/books";
+            }
+        }
+    }
+
     render(){
         
         return (
@@ -65,13 +73,13 @@ class LoginForm extends React.Component<ILoginProps, ILoginState>{
 
 const mapStateToProps = (state: any)=>{
     return{    
-        userData: state.login, 
+        userData: state.login.userData, 
         serverError: state.login.error,
         isLoading: state.login.isLoading
     }};
 
 const mapDispatchToProps = {
-    loginStart
+    loginStart    
 }
 
 

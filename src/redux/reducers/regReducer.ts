@@ -18,7 +18,7 @@ export default (state: any= initialState, action: any)=>{
             return {
                 ...state,
                 isLoading: false,
-                userData: action.payload
+                userId: action.payload
             };
         case REG_ERROR: 
             return {
