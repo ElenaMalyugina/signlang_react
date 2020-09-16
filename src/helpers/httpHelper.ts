@@ -1,10 +1,12 @@
 import { getServerErrorText } from "./getServerErrorText";
 
 class HttpHelper{
-    public static httpGet(url: string): Promise<any>{
-        return fetch(url)
+    public static async httpGet(url: string): Promise<any>{
+        const resp = await fetch(url)
             .then(response => response.json())
             .then(result => result)
+
+        return resp;    
     }
 
     public static async httpPost(url: string, body: any): Promise<any>{
